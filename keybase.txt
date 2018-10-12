@@ -1,0 +1,81 @@
+==================================================================
+https://keybase.io/choco
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://choco.me
+  * I am choco (https://keybase.io/choco) on keybase.
+  * I have a public key with fingerprint 44D8 F6EB 457B 2323 2044  B020 893B A945 D1A4 F499
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01013ed2045539588e6011527ca10143d17eb7b5cd371a65455d983279e20590cf690a",
+      "fingerprint": "44d8f6eb457b23232044b020893ba945d1a4f499",
+      "host": "keybase.io",
+      "key_id": "893ba945d1a4f499",
+      "kid": "01013ed2045539588e6011527ca10143d17eb7b5cd371a65455d983279e20590cf690a",
+      "uid": "83ea33e7933d1434f26513376b0a3900",
+      "username": "choco"
+    },
+    "merkle_root": {
+      "ctime": 1539371926,
+      "hash_meta": "9c6a39fb1f62e68b4fc4e48cd2f8a0de49ef9bd86a4e10dec44dd99e087b850d",
+      "seqno": 3787750
+    },
+    "revoke": {
+      "sig_ids": [
+        "b453daf8a9e57771e537c4036e3a5bc6aca5234a2822ef6991863a0bc08ce3d50f"
+      ]
+    },
+    "service": {
+      "hostname": "choco.me",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1539371935,
+  "expire_in": 157680000,
+  "prev": "33984800203fd920305d1f7292db37545a1c4fa56b5d08a905754379e094296d",
+  "seqno": 16,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.80
+Comment: https://keybase.io/crypto
+
+yMK2AnicrVNtiBVVGL7bruaulgaF4AbarFA/LnJmzjlz5lxILhH0oX2agd6N25k5
+79w77d6Z68zs5mortmbZQqSE7LKGQtSStPhnzf1jcV2ypVRQIlPS/vQjKG9Rq2xL
+FL2zFUj0sxmYM+c9z/u8z3necz65rTXX0XL7k8106Iv7wpYz01FfrtSYPbLTcCM9
+YBR2Gj2wMECvhiQt9wTaKBjEJCYFbRHGOZXcccAmpskt4SlcYVSbAlzhck9TYSqb
+I0xLh1pCgkW4JJ5vS6KMvOEHYQXiehyEKdIyph3fBpdx4VoUX8KYSyziSOoqybg2
+FfOZlJhYjZIsA8W5KoF1QYQxnJQX5P0H/n/W3fdXHQqKUhCSYiajzLdsblIqbJco
+KgnJgAnEoaoBor1q5EXGYN6oQdzTC+U4itLMWS8NsnUTFWFVadm4O5VUyzVIFaZJ
+z0Yy3zV92wLbcZnvMWCOpy3fUUQDk+BLVzu2YmDi3EMXtZRAHOE6nGgUkcC2MDIK
+VDhCcIIKYuiPeiArngQV9CwxCiUDbadaIakELoQwgVPhMUJtoIq7qMJT3KJMWY5l
+ARohTcemirgecTygmhPfeG4wKxb3B94Cedakmze/Dn/zRj2OUpz0YrSapvWkkHmS
+DtQz2Ivglv8mKLtBqPF4YEY/xEkQhegRIv9lF+V5A7bXgxjKQYbgwnYIPlkd6EdK
+SqXDMGQR6muJX4LnwheWtLRLBbZYmR7zFbddrglunnAMUuw4kcyS9k3+mdiZVFWQ
+E10LVdoXgzE43ehuy7V05BYvuiW7N7mO9hX/3KbOpUtybzf2v3nkpcb+VS/zpzbO
+tn20t3noveLq2Veuj55/7bHv7y6pkeKDk59uPbP8jd2lXTPvr7lwjZ27cHrv6Wrt
+q4evjh2fODRw4JnSs/d3fzPZFbw+PNHWcvDpuV+WnPv22tFN946P2PU7mlM3En/m
+h7HGj6OPT23fV4ofWNPVOd/5/OFHROW33+c3p1cu/XHg53DRlrWT45cmhpPFy9pr
+K5tB89Su0eLKqztKy85eTB4qtj9xav36z7aduPj5O8U733308sH8h1u3XPny16BY
+mfy4a8+G8dVfn+9eu+noq5Whe+ZuPTz9ArmxasPxy2NDP7VdX1E4tnTH2bs+mDt5
+cvO+1hO73xpunepVMDO/Z+S7jX8C4X9+jw==
+=/1LC
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/choco
+
+==================================================================
