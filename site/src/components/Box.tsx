@@ -5,6 +5,7 @@ import styles from "./Box.module.css";
 export function Box() {
 	return (
 		<div className={styles.box} data-clear>
+			<div className={styles.glow} />
 			<div className="cm-box__cup cup-filled">
 				<a className="pick nc-scope" href="#nightcap">
 					<span className="sr-only">

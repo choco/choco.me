@@ -1,3 +1,5 @@
+/* The mascot's layers share one box and one viewBox, 164 × 176 units from (-12, 30): a point
+   (x, y) of the drawing is (x + 12) / 164 across the box and (y - 30) / 176 down it. */
 .mascot {
 	--wrap: var(--salmon);
 	--band: var(--pistachio);
@@ -6,26 +8,35 @@
 	bottom: -56px;
 	z-index: 1;
 	width: 140px;
+	aspect-ratio: 164 / 176;
 }
-.mascot :global(.bar-tilt) {
+.mascot svg,
+.tilt {
+	position: absolute;
+	inset: 0;
+}
+.mascot svg {
+	width: 100%;
+	height: 100%;
+}
+/* The bar leans on the box from the middle of its foot, (70, 196); its shadow stays flat. */
+.tilt {
 	transform: rotate(5deg);
-	transform-origin: 70px 196px;
+	transform-origin: 50% calc(166 / 176 * 100%);
 }
 .mascot :global(.blush) {
 	fill: var(--mascot-blush);
 	opacity: 0.35;
 }
-.mascot :global(.eyes) {
-	transition: transform 120ms ease-out;
-}
-.mascot :global(.blink) {
-	transform-box: fill-box;
-	transform-origin: center;
+/* The eyes blink about their middle, (70, 136), wherever they look. */
+.eyes {
+	transform-origin: 50% calc(106 / 176 * 100%);
+	transition: translate 120ms ease-out;
 	animation: blink 5s infinite;
 }
-.mascot :global(.wave) {
-	transform-box: fill-box;
-	transform-origin: 0% 100%;
+/* The arm waves from the shoulder, (120, 138). */
+.wave {
+	transform-origin: calc(132 / 164 * 100%) calc(108 / 176 * 100%);
 	animation: wave 3s ease-in-out infinite;
 }
 @keyframes blink {
@@ -63,8 +74,8 @@
 	}
 }
 @media (prefers-reduced-motion: reduce) {
-	.mascot :global(.blink),
-	.mascot :global(.wave) {
+	.eyes,
+	.wave {
 		animation: none;
 	}
 }

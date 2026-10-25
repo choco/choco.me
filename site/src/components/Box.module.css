@@ -53,16 +53,21 @@
 		),
 		var(--box);
 }
-.box :global(.cup-filled)::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
+/* Its cup's glow shares the cup's cell, under every cup, and the cup stands above the others, so
+   the flag flies in front of the glow and of the cup beside it. */
+.glow,
+.box :global(.cup-filled) {
+	grid-area: 1 / 1;
+}
+.glow {
+	border-radius: var(--radius-md);
 	box-shadow:
 		0 0 0 3px var(--liner),
 		0 0 26px 8px var(--glow);
-	pointer-events: none;
 	animation: glow 3.6s ease-in-out infinite;
+}
+.box :global(.cup-filled) {
+	z-index: 1;
 }
 @keyframes glow {
 	50% {
@@ -114,7 +119,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.box :global(.cup-filled)::after,
+	.glow,
 	.box :global(.pick:hover .flag),
 	.box :global(.pick:focus-visible .flag) {
 		animation: none;
