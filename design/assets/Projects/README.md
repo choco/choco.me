@@ -1,0 +1,1 @@
+Marks of the projects that have a praline. `nightcap-app-icon.svg` is Nightcap's app icon exactly as Nightcap ships it (its repo's `app/icons/AppIcon.svg`), shown at 32px on the dark praline with its macOS corner already drawn into it. Never recolour or redraw it.

@@ -1,0 +1,322 @@
+/* choco.me components. Every value is a variable generated from tokens.json. */
+
+.cm-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 46px;
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  font: 600 16px/1 var(--font-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--dur-pop) var(--ease-pop), background-color var(--dur-quick) ease;
+}
+.cm-button:hover { transform: translateY(-2px) rotate(-2deg) scale(1.04); }
+.cm-button:active { transform: scale(0.96); transition-duration: var(--dur-quick); }
+.cm-button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.cm-button--primary { background: var(--chocolate); color: var(--on-chocolate); }
+.cm-button--secondary { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
+.cm-button--flavour { background: var(--flavour, var(--lemon)); color: var(--on-flavour); }
+.cm-button svg { width: 20px; height: 20px; flex: none; }
+
+/* A praline: the foil on top, the chocolate under it, and the flap the foil folds into when it
+   peels. The peel folds the bottom-right corner along a 45° line, so the flap is that corner
+   mirrored across the line: tiles must stay square. */
+.cm-praline {
+  --flavour: var(--strawberry);
+  --peel: 100%;
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  color: var(--on-flavour);
+  text-decoration: none;
+  isolation: isolate;
+  box-shadow: var(--shadow-sit);
+  transition: transform var(--dur-pop) var(--ease-pop), box-shadow var(--dur-pop) var(--ease-soft);
+}
+.cm-praline:hover, .cm-praline:focus-visible, .cm-praline.is-peeled { --peel: 60%; }
+.cm-praline:hover, .cm-praline:focus-visible { transform: translateY(-6px) rotate(-2deg); box-shadow: var(--shadow-lift); }
+.cm-praline:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.cm-praline__inside {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: var(--space-3);
+  border-radius: inherit;
+  background: var(--cocoa);
+  color: var(--milk);
+}
+.cm-praline__inside svg { width: 28px; height: 28px; }
+.cm-praline__foil {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border-radius: inherit;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 26%, rgba(255, 255, 255, 0.32) 50%, rgba(255, 255, 255, 0) 70%),
+    var(--flavour);
+  clip-path: polygon(0 0, 100% 0, 100% var(--peel), var(--peel) 100%, 0 100%);
+  transition: clip-path var(--dur-peel) var(--ease-soft);
+}
+.cm-praline__flap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  filter: drop-shadow(-3px -3px 4px rgba(61, 37, 32, 0.22));
+}
+.cm-praline__flap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(315deg, color-mix(in oklab, var(--flavour) 45%, #ffffff), var(--flavour));
+  clip-path: polygon(100% var(--peel), var(--peel) 100%, var(--peel) var(--peel));
+  transition: clip-path var(--dur-peel) var(--ease-soft);
+}
+.cm-praline__mark { flex: none; width: 32px; height: 32px; margin-bottom: var(--space-2); }
+.cm-praline__mark img { width: 100%; height: 100%; display: block; border-radius: 22.45%; }
+.cm-praline__name { font: 650 19px/1.3 var(--font-text); }
+.cm-praline__line { font: 400 14px/1.45 var(--font-text); max-width: 85%; }
+.cm-praline--dark { --flavour: var(--cocoa); color: var(--milk); }
+.cm-praline--dark .cm-praline__foil {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 26%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 70%),
+    var(--cocoa);
+}
+.cm-praline--dark .cm-praline__inside { background: var(--filling, var(--lavender)); color: var(--on-flavour); }
+
+/* The box: a tray of paper cups, one praline in each. */
+.cm-box {
+  display: grid;
+  grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--box);
+}
+.cm-box__cup {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 7px;
+  border-radius: var(--radius-md);
+  background: repeating-conic-gradient(from 0deg, var(--box) 0deg 5deg, var(--surface) 5deg 10deg);
+}
+/* A cup's contents are pinned inside its padding, not sized with height: 100%: WebKit resolves a
+   percentage height inside an aspect-ratio box against its border box, so they would cover the pleats. */
+.cm-box__cup > * { position: absolute; inset: 7px; }
+.cm-box__cup > .cm-praline { border-radius: calc(var(--radius-md) - 5px); }
+/* The cup whose praline is still there glows: a gold ring and a soft halo that pulses, and warm
+   light behind the praline. `cm-box__cup--gold` is the quieter alternative, a gold paper cup. */
+.cm-box__cup--filled { --liner: #f3cf7e; --glow: rgba(240, 180, 60, 0.6); }
+[data-theme="dark"] .cm-box__cup--filled { --liner: #9a7a3a; --glow: rgba(246, 213, 138, 0.45); }
+.cm-box__cup--filled > .cm-pick { background: radial-gradient(circle at 50% 55%, rgba(246, 213, 138, 0.95) 34%, rgba(246, 213, 138, 0) 74%), var(--box); }
+.cm-box__cup--filled::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 3px var(--liner), 0 0 26px 8px var(--glow); pointer-events: none; animation: cm-glow 3.6s ease-in-out infinite; }
+@keyframes cm-glow { 50% { opacity: 0.45; } }
+.cm-box__cup--gold { --liner: #f3cf7e; --liner-soft: #fbeac0; background: repeating-conic-gradient(from 0deg, var(--liner) 0deg 5deg, var(--liner-soft) 5deg 10deg); }
+[data-theme="dark"] .cm-box__cup--gold { --liner: #9a7a3a; --liner-soft: #5e4a24; }
+.cm-box__cup--gold > .cm-pick { background: var(--liner-soft); }
+.cm-box__cup--gold::after { content: none; }
+.cm-box__crumbs { display: grid; place-items: center; border-radius: calc(var(--radius-md) - 5px); background: var(--box); color: var(--ink-muted); font: 500 18px/1.25 var(--font-note); text-align: center; }
+
+/* A handwritten aside, with the curly arrow pointing at its subject. */
+.cm-note {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  color: var(--note, var(--ink-muted));
+  font: 500 24px/1.2 var(--font-note);
+  font-variation-settings: "INFM" 100, "BNCE" 0;
+  transform: rotate(-4deg);
+  animation: cm-bounce 3.2s var(--ease-soft) infinite alternate;
+}
+.cm-note svg { width: 40px; height: 40px; flex: none; }
+.cm-note--flip svg { transform: scaleX(-1); }
+@keyframes cm-bounce { to { font-variation-settings: "INFM" 100, "BNCE" 70; } }
+
+/* Doodles and sprinkles scattered behind content. */
+.cm-doodles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.cm-doodle {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  color: var(--tint, var(--strawberry-text));
+  opacity: 0.5;
+  animation: cm-sway calc(var(--dur-drift) / 3) ease-in-out infinite alternate;
+}
+.cm-sprinkle {
+  position: absolute;
+  width: 7px;
+  height: 22px;
+  border-radius: var(--radius-pill);
+  background: var(--tint, var(--strawberry));
+  transform: rotate(var(--turn, 30deg));
+  animation: cm-tumble var(--dur-drift) linear infinite;
+}
+@keyframes cm-sway { from { transform: rotate(-8deg) translateY(0); } to { transform: rotate(8deg) translateY(-6px); } }
+@keyframes cm-tumble { to { transform: rotate(calc(var(--turn, 30deg) + 360deg)); } }
+
+/* Social links: round icon buttons, each on its own flavour. */
+.cm-socials { display: flex; flex-wrap: wrap; gap: 14px; }
+.cm-social {
+  --flavour: var(--strawberry);
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-pill);
+  background: var(--flavour);
+  color: var(--on-flavour);
+  transition: transform var(--dur-pop) var(--ease-pop);
+}
+.cm-social svg { width: 21px; height: 21px; }
+.cm-social:hover { transform: translateY(-3px) rotate(-8deg) scale(1.06); }
+.cm-social:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* The mascot: a chocolate bar in a salmon wrapper with a pistachio band. Its colours come from
+   --wrap and --band, so the same drawing works anywhere. */
+.cm-mascot { --wrap: var(--salmon); --band: var(--pistachio); width: 140px; display: block; }
+.cm-mascot .bar-tilt { transform: rotate(5deg); transform-origin: 70px 196px; }
+.cm-mascot--upright .bar-tilt { transform: none; }
+.cm-mascot .blush { fill: var(--mascot-blush); opacity: 0.35; }
+.cm-mascot .blink { animation: cm-blink 5s infinite; transform-box: fill-box; transform-origin: center; }
+.cm-mascot .wave { animation: cm-wave 3s ease-in-out infinite; transform-box: fill-box; transform-origin: 0% 100%; }
+.cm-mascot .eyes { transition: transform 120ms ease-out; }
+@keyframes cm-blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+@keyframes cm-wave { 0%, 55%, 100% { transform: rotate(0); } 65% { transform: rotate(-22deg); } 75% { transform: rotate(6deg); } 85% { transform: rotate(-16deg); } }
+
+/* The box of one: cups holding drawn things. The product's praline is a link; the rest are left-overs. */
+.cm-cup-art { display: block; width: 100%; height: 100%; overflow: visible; transform: scale(1.2); }
+.cm-pick { display: block; border-radius: calc(var(--radius-md) - 5px); background: var(--box); }
+.cm-pick .pr { transition: transform var(--dur-pop) var(--ease-pop); transform-box: fill-box; transform-origin: center; }
+.cm-pick .flag { transform-box: fill-box; transform-origin: 0% 100%; }
+/* The praline's shadow stays on the cup's floor, outside .pr: as the praline lifts, it spreads and fades. */
+.cm-pick .shadow { opacity: 0.14; transform-box: fill-box; transform-origin: center; transition: transform var(--dur-pop) var(--ease-pop), opacity var(--dur-pop) var(--ease-soft); }
+.cm-pick:hover .shadow, .cm-pick:focus-visible .shadow { opacity: 0.08; transform: scale(1.2, 1.1); }
+.cm-pick:hover .pr, .cm-pick:focus-visible .pr { transform: translateY(-8px) rotate(-6deg); }
+.cm-pick:hover .flag, .cm-pick:focus-visible .flag { animation: cm-flag 700ms var(--ease-pop); }
+.cm-pick:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+@keyframes cm-flag { 30% { transform: rotate(-8deg); } 60% { transform: rotate(5deg); } }
+
+/* A product's section: full-bleed, in the product's own ground, with paper-cup scallops. */
+.cm-section { --scallop: var(--ground); }
+.cm-section__scallop { height: 18px; }
+.cm-section__scallop--top { background: radial-gradient(circle at 18px 18px, var(--scallop) 17.5px, transparent 18px) 0 0 / 36px 18px repeat-x; }
+.cm-section__scallop--bottom { background: radial-gradient(circle at 18px 0, var(--scallop) 17.5px, transparent 18px) 0 0 / 36px 18px repeat-x; }
+.cm-section__band { background: var(--scallop); }
+
+/* The hot cocoa the page ends in. */
+.cm-cocoa { position: relative; }
+.cm-cocoa__scene { display: block; width: 100%; height: 170px; }
+.cm-cocoa__scene .steam path { animation: cm-steam 4.5s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+.cm-cocoa__scene .steam .s2 { animation-delay: -1.5s; }
+.cm-cocoa__scene .steam .s3 { animation-delay: -3s; }
+.cm-cocoa__body { position: relative; overflow: hidden; background: var(--cocoa); color: var(--milk); }
+.cm-cocoa__line { margin: 0; font: 850 clamp(30px, 4vw, 44px)/1.05 var(--font-display); color: var(--milk); text-wrap: balance; }
+.cm-cocoa__text { margin: 0; font: 400 17px/1.6 var(--font-text); color: var(--lavender); max-width: 46ch; }
+.cm-cocoa__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); font: 400 14px/1.5 var(--font-text); color: var(--lavender); }
+.cm-made { display: inline-block; width: 18px; height: 18px; vertical-align: -4px; }
+.cm-made--chocolate { color: var(--apricot); }
+.cm-made--love { color: var(--strawberry); transform-origin: center; }
+.cm-cocoa__made:hover .cm-made--love { animation: cm-beat 900ms var(--ease-pop); }
+.cm-cocoa__signoff { margin: 0; text-align: center; font: 500 15px/1.2 var(--font-note); font-variation-settings: "INFM" 100; color: var(--lavender); opacity: 0.8; }
+.cm-sinker { position: absolute; width: 6px; height: 18px; border-radius: var(--radius-pill); opacity: 0.75; transform: rotate(var(--r, 30deg)); animation: cm-sink 16s linear infinite; }
+/* Visible overflow: the vanilla marshmallow's drop overshoots its seat. */
+.cm-marshmallow { width: 128px; height: 180px; flex: none; overflow: visible; }
+.cm-marshmallow--seat { width: 227px; }
+/* The saved seat: the pink marshmallow sleeps beside a dashed empty seat. Reaching the sponsor
+   button wakes it and drops a vanilla one into the seat. */
+.cm-marshmallow .awake { opacity: 0; transition: opacity 200ms var(--ease-soft); }
+.cm-marshmallow .zz { transition: opacity 200ms var(--ease-soft); }
+.cm-marshmallow .seat { animation: cm-seat 3.2s ease-in-out infinite; transition: opacity 200ms var(--ease-soft); }
+.cm-marshmallow .friend { opacity: 0; transform: translateY(-70px) rotate(-24deg); transform-box: fill-box; transform-origin: center; transition: transform 900ms var(--ease-pop), opacity 300ms var(--ease-soft); }
+.cm-cocoa__sponsor:has(.cm-button:hover, .cm-button:focus-visible) .friend { opacity: 1; transform: none; }
+.cm-cocoa__sponsor:has(.cm-button:hover, .cm-button:focus-visible) .seat { opacity: 0; animation: none; }
+.cm-cocoa__sponsor:has(.cm-button:hover, .cm-button:focus-visible) .me .zz { opacity: 0; }
+.cm-cocoa__sponsor:has(.cm-button:hover, .cm-button:focus-visible) .me .awake { opacity: 1; }
+@keyframes cm-seat { 50% { opacity: 0.55; } }
+.cm-marshmallow .bubble { animation: cm-bubble 3.6s ease-in infinite; transform-box: fill-box; transform-origin: center; }
+.cm-marshmallow .b2 { animation-delay: -1.2s; }
+.cm-marshmallow .b3 { animation-delay: -2.4s; }
+@keyframes cm-steam { 0% { transform: translateY(8px); opacity: 0; } 40% { opacity: 1; } 100% { transform: translateY(-14px); opacity: 0; } }
+@keyframes cm-sink { 0% { transform: translateY(-24px) rotate(var(--r, 30deg)); opacity: 0; } 15%, 85% { opacity: 0.75; } 100% { transform: translateY(40px) rotate(calc(var(--r, 30deg) + 120deg)); opacity: 0; } }
+@keyframes cm-beat { 30% { transform: scale(1.25); } 55% { transform: scale(0.95); } 75% { transform: scale(1.12); } }
+@keyframes cm-bubble { 0% { transform: translateY(14px) scale(0.6); opacity: 0; } 30% { opacity: 0.7; } 100% { transform: translateY(-10px) scale(1); opacity: 0; } }
+
+/* Writing: the list of things written, its empty state, recipe cards, and an article's prose. */
+.cm-wlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.cm-wlist a, .cm-wrow { display: grid; grid-template-columns: 16px 96px 1fr auto; align-items: center; gap: 18px; padding: 18px 4px; min-height: 26px; border-bottom: 2px dashed var(--line); text-decoration: none; color: var(--ink); }
+[data-theme="dark"] .cm-wlist a, [data-theme="dark"] .cm-wrow { border-bottom-color: #5c4038; }
+.cm-wlist__dot { width: 7px; height: 20px; border-radius: var(--radius-pill); background: var(--flavour, var(--lemon)); transform: rotate(30deg); transition: transform var(--dur-pop) var(--ease-pop); }
+.cm-wlist a:hover .cm-wlist__dot { transform: rotate(210deg); }
+.cm-wlist__date { font: 500 14px/1.3 var(--font-text); color: var(--ink-muted); }
+.cm-wlist__title { font: 650 19px/1.35 var(--font-text); }
+.cm-wlist__read { font: 500 14px/1.3 var(--font-text); color: var(--ink-muted); }
+.cm-wempty { position: relative; }
+.cm-wrow--blank:nth-of-type(2) .cm-wlist__dot { opacity: 0.5; }
+.cm-wrow--blank:nth-of-type(3) .cm-wlist__dot { opacity: 0.25; }
+.cm-wempty__soon { font: 500 18px/1.3 var(--font-note); font-variation-settings: "INFM" 100; color: var(--lavender-text); }
+.cm-wempty__hand { display: flex; align-items: flex-end; gap: 2px; font: 500 22px/1.2 var(--font-note); font-variation-settings: "INFM" 100; color: var(--lavender-text); }
+.cm-wempty__pencil { flex: none; width: 76px; margin: 0 0 4px 4px; transform-origin: 0% 50%; transform: rotate(-28deg); animation: cm-scribble 5s ease-in-out infinite; }
+@keyframes cm-scribble { 0%, 70%, 100% { transform: rotate(-28deg); } 74% { transform: rotate(-34deg) translateX(-3px); } 78% { transform: rotate(-24deg) translateX(2px); } 82% { transform: rotate(-33deg) translateX(-2px); } 86% { transform: rotate(-26deg); } }
+.cm-wempty__follow { margin: 24px 0 0; padding-inline: 4px; font: 400 17px/1.5 var(--font-text); color: var(--ink-muted); }
+.cm-wempty__follow a { color: var(--ink); font-weight: 650; text-decoration: underline wavy var(--strawberry); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.cm-wempty__stack { position: absolute; right: -20px; top: -16px; width: 360px; height: 240px; transform: scale(0.9); transform-origin: 100% 0; }
+.cm-blank { position: absolute; left: 66px; top: 40px; width: 232px; height: 164px; border-radius: var(--radius-md); background: var(--surface); overflow: hidden; box-shadow: var(--shadow-sit); transition: transform var(--dur-pop) var(--ease-pop); }
+.cm-blank::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 2px var(--line); }
+.cm-blank .cm-recipe__top { display: block; }
+.cm-blank__lines { position: absolute; left: 22px; right: 22px; bottom: 30px; display: flex; flex-direction: column; gap: 22px; }
+.cm-blank__lines i { display: block; height: 2px; background: repeating-linear-gradient(90deg, var(--line-strong) 0 6px, transparent 6px 12px); opacity: 0.45; }
+.cm-blank__lines i:nth-child(2) { width: 86%; }
+.cm-blank__lines i:nth-child(3) { width: 58%; }
+.cm-blank__hand { position: absolute; left: 22px; top: 44px; font: 500 24px/1 var(--font-note); font-variation-settings: "INFM" 100; color: var(--lavender-text); }
+.cm-blank--1 { transform: rotate(-3deg); }
+.cm-blank--1 .cm-blank__lines { bottom: 22px; }
+.cm-blank--1 .cm-blank__lines i:first-child { opacity: 0.7; }
+.cm-blank--2 { transform: translate(-50px, 14px) rotate(-11deg); }
+.cm-blank--3 { transform: translate(50px, -8px) rotate(9deg); }
+.cm-wempty__stack:hover .cm-blank--1 { transform: translateY(-8px) rotate(-1deg); }
+.cm-wempty__stack:hover .cm-blank--2 { transform: translate(-78px, 8px) rotate(-16deg); }
+.cm-wempty__stack:hover .cm-blank--3 { transform: translate(80px, -16px) rotate(14deg); }
+.cm-recipe { position: relative; display: flex; flex-direction: column; border-radius: var(--radius-md); background: var(--surface); text-decoration: none; color: var(--ink); overflow: hidden; transition: transform var(--dur-pop) var(--ease-pop); }
+.cm-recipe::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 2px var(--line); pointer-events: none; }
+.cm-recipe:hover { transform: translateY(-4px) rotate(-1deg); }
+.cm-recipe:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+/* The band is 1px shorter than its tile, so a tilted card shows no seam. */
+.cm-recipe__top { height: 29px; background: radial-gradient(circle at 12px 30px, var(--surface) 12.5px, var(--flavour, var(--lemon)) 13px) 0 0 / 24px 30px repeat-x; }
+.cm-recipe__body { display: flex; flex-direction: column; gap: 10px; padding: 16px 22px 24px; }
+.cm-recipe__meta { font: 600 12px/1.3 var(--font-text); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); }
+.cm-recipe__title { font: 650 20px/1.3 var(--font-text); text-wrap: balance; }
+.cm-recipe__text { font: 400 15px/1.5 var(--font-text); color: var(--ink-muted); }
+.cm-prose p { margin: 0; max-width: 600px; font: 400 18px/1.7 var(--font-text); color: var(--ink-body); }
+[data-theme="dark"] .cm-prose p { font-weight: 380; letter-spacing: 0.01em; line-height: 1.75; }
+.cm-prose figure { margin: 14px 0 6px; max-width: 600px; }
+@media (max-width: 640px) {
+  .cm-wlist a, .cm-wrow { grid-template-columns: 16px 1fr; row-gap: 4px; }
+  .cm-wlist__date, .cm-wempty__soon { display: none; }
+  .cm-wempty__hand { font-size: 19px; }
+  .cm-wempty__pencil { width: 54px; }
+  .cm-wempty__stack { right: -6px; top: 58px; transform: scale(0.6); }
+  .cm-wempty__follow { margin-top: 44px; }
+}
+
+/* The appearance switch: system, light, dark. On cocoa. */
+.cm-switch { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--radius-pill); box-shadow: inset 0 0 0 1px rgba(255, 250, 247, 0.22); }
+.cm-switch button { display: grid; place-items: center; width: 38px; height: 34px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--lavender); cursor: pointer; }
+.cm-switch button[aria-pressed="true"] { background: rgba(255, 250, 247, 0.14); color: var(--milk); }
+.cm-switch button:focus-visible { outline: 2px solid var(--blueberry); outline-offset: 2px; }
+.cm-switch svg { width: 17px; height: 17px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cm-button, .cm-praline, .cm-praline__foil, .cm-praline__flap::before, .cm-social, .cm-pick .pr, .cm-pick .shadow, .cm-blank, .cm-recipe, .cm-wlist__dot, .cm-marshmallow .friend, .cm-marshmallow .awake, .cm-marshmallow .zz, .cm-marshmallow .seat { transition: none; }
+  .cm-note, .cm-doodle, .cm-sprinkle, .cm-mascot .blink, .cm-mascot .wave, .cm-pick:hover .flag, .cm-cocoa__scene .steam path, .cm-sinker, .cm-marshmallow .bubble, .cm-cocoa__made:hover .cm-made--love, .cm-box__cup--filled::after, .cm-marshmallow .seat, .cm-wempty__pencil { animation: none; }
+}

@@ -1,0 +1,49 @@
+<!-- @dsCard height=288 -->
+<style>
+  html, body { margin: 0; }
+  .cover { position: relative; width: 960px; height: 288px; background: var(--ground); overflow: hidden; }
+  .cover svg { position: absolute; inset: 0; }
+  .tray { fill: var(--cocoa); }
+  .strawberry { fill: var(--strawberry); }
+  .salmon { fill: var(--salmon); }
+  .lemon { fill: var(--lemon); }
+  .pistachio { fill: var(--pistachio); }
+  .lavender { fill: var(--lavender); }
+  .tile { rx: var(--radius-md); }
+  .tray-edge { rx: var(--radius-lg); }
+  .pill { rx: 3.5px; }
+  .words { position: absolute; left: 48px; bottom: 40px; width: 420px; display: flex; flex-direction: column; gap: var(--space-3); }
+  .name { margin: 0; font: 900 80px/0.92 var(--font-display); color: var(--ink); letter-spacing: -0.01em; }
+  .tagline { margin: 0; font: 400 14px/1.45 var(--font-text); color: var(--ink-muted); }
+</style>
+<div class="cover">
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <!--
+      blocks: a cocoa tray 400 × 288 bleeding top, right and bottom; salmon, lemon, pistachio, lavender pralines space-20 square cut by radius-md
+      arrangement: the box seen from above, a 3 × 2 grid of cups at a space-4 gap with the middle cup of the bottom row empty, its salmon praline hopped out onto the ground
+      pattern: soft, friendly, a literal motif → sprinkles, pills 7 × 22 at radius-pill, spilling from the empty cup across the ground; choco.me is a box of chocolates with sprinkles on the page
+      steps and radii: pralines space-20, gap space-4, tray inset space-6; radius-md, radius-lg, radius-pill
+    -->
+    <rect class="tray tray-edge" x="584" y="-40" width="420" height="368"/>
+    <rect class="lemon tile" x="632" y="40" width="80" height="80"/>
+    <rect class="pistachio tile" x="736" y="40" width="80" height="80"/>
+    <rect class="lavender tile" x="840" y="40" width="80" height="80"/>
+    <rect class="lavender tile" x="632" y="144" width="80" height="80"/>
+    <rect class="lemon tile" x="840" y="144" width="80" height="80"/>
+    <rect class="salmon tile" x="500" y="176" width="80" height="80" transform="rotate(-12 540 216)"/>
+    <g>
+      <rect class="strawberry pill" x="768" y="168" width="7" height="22" transform="rotate(30 771 179)"/>
+      <rect class="lemon pill" x="790" y="196" width="7" height="22" transform="rotate(-50 793 207)"/>
+      <rect class="lavender pill" x="756" y="206" width="7" height="22" transform="rotate(75 759 217)"/>
+      <rect class="pistachio pill" x="600" y="244" width="7" height="22" transform="rotate(-20 603 255)"/>
+      <rect class="lemon pill" x="520" y="112" width="7" height="22" transform="rotate(40 523 123)"/>
+      <rect class="lavender pill" x="548" y="70" width="7" height="22" transform="rotate(-65 551 81)"/>
+      <rect class="pistachio pill" x="506" y="34" width="7" height="22" transform="rotate(15 509 45)"/>
+      <rect class="strawberry pill" x="620" y="262" width="7" height="22" transform="rotate(80 623 273)"/>
+    </g>
+  </svg>
+  <div class="words">
+    <p class="name">choco.me</p>
+    <p class="tagline">Pastel pralines on a milk-white page, with cocoa for ink.</p>
+  </div>
+</div>
