@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not in the box · Enrico Ghirardi</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#fffaf7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#221513" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>
+  // The footer's appearance switch, applied before the first paint.
+  try {
+    const theme = localStorage.getItem('choco-theme');
+    if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+  } catch {}
+</script>
+<script type="module" src="/src/not-found.tsx"></script>
+</head>
+<body>
+<div id="root"><!--app--></div>
+</body>
+</html>

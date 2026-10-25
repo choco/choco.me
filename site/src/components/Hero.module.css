@@ -1,0 +1,206 @@
+.hero {
+	position: relative;
+	padding-block: 112px 128px;
+}
+.inner {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: clamp(40px, 5vw, 72px);
+	max-width: calc(var(--column) + 2 * var(--gut));
+	margin-inline: auto;
+	padding-inline: var(--gut);
+}
+.inner > * {
+	min-width: 0;
+}
+.text {
+	display: flex;
+	flex: 1 1 340px;
+	flex-direction: column;
+	gap: 24px;
+}
+
+/* The name's highlight is the hello's one accent. */
+.name {
+	position: relative;
+	display: inline-block;
+	padding: 0 0.1em;
+	border-radius: 0.3em;
+	background: var(--strawberry);
+	color: var(--on-flavour);
+}
+.intro {
+	max-width: 34ch;
+	color: var(--ink-muted);
+	text-wrap: pretty;
+}
+
+.socials {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+}
+.social {
+	display: grid;
+	place-items: center;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: var(--flavour);
+	color: var(--cocoa);
+	transition: transform var(--dur-pop) var(--ease-pop);
+}
+.social svg {
+	width: 21px;
+	height: 21px;
+}
+.social .linkedin {
+	width: 19px;
+	height: 19px;
+}
+.social:hover {
+	transform: translateY(-3px) rotate(-8deg) scale(1.06);
+}
+.social:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 3px;
+}
+
+.boxColumn {
+	position: relative;
+	flex: 1 1 420px;
+	max-width: 540px;
+}
+.tryNote {
+	position: absolute;
+	top: -62px;
+	right: -12px;
+	z-index: 2;
+	align-items: flex-start;
+}
+.tryNote > svg {
+	margin-top: 4px;
+}
+.caption {
+	position: absolute;
+	right: 118px;
+	bottom: -80px;
+}
+
+/* The recipe card tucked under the box, peeking out towards the writing. */
+.tucked {
+	position: absolute;
+	left: -34px;
+	bottom: -80px;
+	z-index: 0;
+	width: 160px;
+	height: 150px;
+	overflow: hidden;
+	border-radius: var(--radius-md);
+	background: var(--surface);
+	color: var(--ink);
+	text-decoration: none;
+	transform: rotate(-5deg);
+	transition: transform var(--dur-pop) var(--ease-pop);
+}
+.tucked::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	box-shadow: inset 0 0 0 2px var(--line);
+	pointer-events: none;
+}
+.tucked:hover,
+.tucked:focus-visible {
+	transform: translateY(14px) rotate(-8deg);
+}
+.tucked:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 3px;
+}
+/* One pixel shorter than its scallops' tile, so a tilted card shows no seam. */
+.tuckedTop {
+	position: absolute;
+	inset: 0 0 auto;
+	height: 23px;
+	background:
+		radial-gradient(
+			circle at 12px 24px,
+			var(--surface) 12.5px,
+			var(--lemon) 13px
+		)
+		0 0 / 24px 24px repeat-x;
+}
+.tuckedBody {
+	position: absolute;
+	left: 18px;
+	right: 14px;
+	bottom: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.tuckedTitle {
+	font: 850 26px / 1 var(--family-display);
+}
+.tuckedMeta {
+	color: var(--ink-muted);
+	font: 600 12px / 1.2 var(--family-text);
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+
+/* The note under the hello that points down into Nightcap's section. */
+.handoff {
+	position: relative;
+	height: 0;
+	max-width: calc(var(--column) + 2 * var(--gut));
+	margin-inline: auto;
+	padding-inline: var(--gut);
+}
+.unwrapped {
+	position: absolute;
+	top: -58px;
+	left: var(--gut);
+}
+
+/* Stacked, the box sits low in the hello, so the notes under it need the room. */
+@media (min-width: 641px) and (max-width: 899px) {
+	.hero {
+		padding-bottom: 184px;
+	}
+}
+@media (max-width: 640px) {
+	.hero {
+		padding-block: 56px 144px;
+	}
+	.tucked {
+		left: -8px;
+		bottom: -88px;
+		width: 150px;
+		height: 140px;
+	}
+	.tryNote,
+	.caption,
+	.unwrapped {
+		display: none;
+	}
+}
+@media (max-width: 360px) {
+	.socials {
+		gap: 10px;
+	}
+	.social {
+		width: 46px;
+		height: 46px;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.social,
+	.tucked {
+		transition: none;
+	}
+}

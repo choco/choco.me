@@ -1,0 +1,320 @@
+.footer {
+	position: relative;
+	margin-top: 120px;
+}
+.surface {
+	position: relative;
+}
+.art {
+	display: block;
+	width: 100%;
+	height: 170px;
+}
+.art :global(.steam path) {
+	transform-box: fill-box;
+	transform-origin: 50% 100%;
+	animation: steam 4.5s ease-in-out infinite;
+}
+.art :global(.steam .s2) {
+	animation-delay: -1.5s;
+}
+.art :global(.steam .s3) {
+	animation-delay: -3s;
+}
+.art :global(.steam-phone) {
+	display: none;
+}
+@keyframes steam {
+	0% {
+		transform: translateY(8px);
+		opacity: 0;
+	}
+	40% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(-14px);
+		opacity: 0;
+	}
+}
+.note {
+	position: absolute;
+	top: -4px;
+	left: calc(50% - 250px);
+}
+
+.cocoa {
+	position: relative;
+	overflow: hidden;
+	background: var(--cocoa);
+	color: var(--milk);
+}
+.sinkerSpot {
+	width: 6px;
+	height: 18px;
+}
+.sinker {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border-radius: 999px;
+	background: var(--tint);
+	opacity: 0.75;
+	transform: rotate(var(--turn));
+	animation: sink 16s linear infinite;
+}
+@keyframes sink {
+	0% {
+		transform: translateY(-24px) rotate(var(--turn));
+		opacity: 0;
+	}
+	15%,
+	85% {
+		opacity: 0.75;
+	}
+	100% {
+		transform: translateY(40px) rotate(calc(var(--turn) + 120deg));
+		opacity: 0;
+	}
+}
+
+.inner {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 44px;
+	max-width: calc(var(--column) + 2 * var(--gut));
+	margin-inline: auto;
+	padding: 44px var(--gut) 28px;
+}
+.sponsor {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 32px;
+}
+.sponsorText {
+	display: flex;
+	flex: 1 1 380px;
+	flex-direction: column;
+	gap: 14px;
+	min-width: 0;
+}
+.sign {
+	color: var(--milk);
+	font: 850 clamp(30px, 4vw, 44px) / 1.05 var(--family-display);
+	text-wrap: balance;
+}
+.copy {
+	max-width: 46ch;
+	color: var(--lavender);
+	text-wrap: pretty;
+}
+.cta {
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-2);
+	height: 46px;
+	margin-top: 8px;
+	padding: 0 var(--space-6);
+	border: 2px solid transparent;
+	border-radius: var(--radius-pill);
+	background: var(--lemon);
+	color: var(--on-flavour);
+	font: 600 16px / 1 var(--family-text);
+	text-decoration: none;
+	transition: transform var(--dur-pop) var(--ease-pop);
+}
+.cta svg {
+	flex: none;
+	width: 20px;
+	height: 20px;
+}
+.cta:hover {
+	transform: translateY(-2px) rotate(-2deg) scale(1.04);
+}
+.cta:active {
+	transform: scale(0.96);
+	transition-duration: var(--dur-quick);
+}
+.cta:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+}
+
+/* The marshmallows: the pink one asleep, bubbles rising, beside a seat that waits for a sponsor's. */
+.marshmallows {
+	flex: none;
+	width: 227px;
+	height: 180px;
+	margin-block: -48px -24px;
+	overflow: visible;
+}
+.marshmallows :global(.bubble) {
+	transform-box: fill-box;
+	transform-origin: center;
+	animation: bubble 3.6s ease-in infinite;
+}
+.marshmallows :global(.b2) {
+	animation-delay: -1.2s;
+}
+.marshmallows :global(.b3) {
+	animation-delay: -2.4s;
+}
+@keyframes bubble {
+	0% {
+		transform: translateY(14px) scale(0.6);
+		opacity: 0;
+	}
+	30% {
+		opacity: 0.7;
+	}
+	100% {
+		transform: translateY(-10px) scale(1);
+		opacity: 0;
+	}
+}
+.marshmallows :global(.zz) {
+	transition: opacity 200ms var(--ease-soft);
+}
+.marshmallows :global(.awake) {
+	opacity: 0;
+	transition: opacity 200ms var(--ease-soft);
+}
+.marshmallows :global(.seat) {
+	animation: seat 3.2s ease-in-out infinite;
+	transition: opacity 200ms var(--ease-soft);
+}
+@keyframes seat {
+	50% {
+		opacity: 0.55;
+	}
+}
+.marshmallows :global(.friend) {
+	opacity: 0;
+	transform: translateY(-70px) rotate(-24deg);
+	transform-box: fill-box;
+	transform-origin: center;
+	transition:
+		transform 900ms var(--ease-pop),
+		opacity 300ms var(--ease-soft);
+}
+.sponsor:has(.cta:hover, .cta:focus-visible) .marshmallows :global(.friend) {
+	opacity: 1;
+	transform: none;
+}
+.sponsor:has(.cta:hover, .cta:focus-visible) .marshmallows :global(.seat) {
+	opacity: 0;
+	animation: none;
+}
+.sponsor:has(.cta:hover, .cta:focus-visible) .marshmallows :global(.zz) {
+	opacity: 0;
+}
+.sponsor:has(.cta:hover, .cta:focus-visible) .marshmallows :global(.awake) {
+	opacity: 1;
+}
+
+.meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
+/* The doodles stand in for the words; the heart beats once on hover. */
+.madeIcon {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	vertical-align: -4px;
+}
+.chocolate {
+	color: var(--apricot);
+}
+.love {
+	color: var(--strawberry);
+	transform-origin: center;
+}
+.made:hover .love {
+	animation: beat 900ms var(--ease-pop);
+}
+@keyframes beat {
+	30% {
+		transform: scale(1.25);
+	}
+	55% {
+		transform: scale(0.95);
+	}
+	75% {
+		transform: scale(1.12);
+	}
+}
+.cowboy {
+	margin-top: -24px;
+	color: var(--lavender);
+	font: 500 15px / 1.2 var(--family-note);
+	font-variation-settings: "INFM" 100;
+	text-align: center;
+	opacity: 0.8;
+}
+
+/* On phones the footer is one centred column; the marshmallows are the break before the meta row. */
+@media (max-width: 640px) {
+	.footer {
+		margin-top: 24px;
+	}
+	.art :global(.steam-phone) {
+		display: inline;
+	}
+	.note {
+		top: 10px;
+		left: 16px;
+	}
+	.sponsor {
+		justify-content: center;
+	}
+	.sponsorText {
+		align-items: center;
+		text-align: center;
+	}
+	.cta {
+		align-self: center;
+	}
+	.marshmallows {
+		margin-block: -30px -12px;
+	}
+	.meta {
+		flex-direction: column;
+		justify-content: center;
+		gap: 14px;
+		text-align: center;
+	}
+	.metaDot {
+		display: none;
+	}
+	.made {
+		display: block;
+	}
+	.cowboy {
+		margin-top: -6px;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.art :global(.steam path),
+	.sinker,
+	.marshmallows :global(.bubble),
+	.marshmallows :global(.seat),
+	.made:hover .love {
+		animation: none;
+	}
+	.marshmallows :global(.friend),
+	.marshmallows :global(.awake),
+	.marshmallows :global(.zz),
+	.marshmallows :global(.seat),
+	.cta {
+		transition: none;
+	}
+}

@@ -1,0 +1,71 @@
+choco.me is licensed in three parts: the code, the writing, and the artwork and design.
+Each part below says what it covers.
+
+Code: MIT License
+-----------------
+
+The source code (the site's components, styles and build in site/, the workflows in
+.github/, and the repository's configuration) is licensed under the MIT License, reproduced
+at the end of this file. It doesn't cover the writing or the artwork and design described
+below, even where they sit inside a source file.
+
+Writing: CC BY 4.0
+------------------
+
+The text written for choco.me (its posts and articles, and the page's own copy: the hello,
+the notes, the captions) is licensed under the Creative Commons Attribution 4.0
+International License (CC BY 4.0). To view a copy of this license, visit
+https://creativecommons.org/licenses/by/4.0/
+
+Attribute it to Enrico Ghirardi, with a link to choco.me.
+
+Artwork and design: all rights reserved
+---------------------------------------
+
+Copyright (c) 2026 Enrico Ghirardi. All rights reserved.
+
+The artwork and the design are not licensed for reuse:
+
+- the illustrations, wherever they appear: the chocolate bar mascot, the box and its
+  pralines, the marshmallows, the hot cocoa, the blank recipe cards, the pencils, the doodles
+  and the favicon, including the SVG drawings inside the site's components
+  (site/src/components/) and the images in site/public/;
+- the design system in design/: its characters, assets, tokens and brand book.
+
+No part of this file grants rights to the name Enrico Ghirardi or to the choco.me identity.
+
+Third-party material
+--------------------
+
+These keep their own licences, which ship beside them:
+
+- the fonts in design/fonts/ (Gluten, Onest, Shantell Sans) and site/vendor/nightcap/fonts/
+  (Caprasimo, Figtree): SIL Open Font License 1.1, see design/licenses/ and
+  site/vendor/nightcap/licenses/;
+- the Bluesky, Mastodon and GitHub marks, from Simple Icons: CC0 1.0;
+- the LinkedIn mark, from Bootstrap Icons: MIT, see design/licenses/MIT-BootstrapIcons.txt;
+- site/vendor/nightcap/: Nightcap's design tokens, under Nightcap's MIT License,
+  Copyright (c) 2026 Enrico Ghirardi.
+
+MIT License
+-----------
+
+Copyright (c) 2026 Enrico Ghirardi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

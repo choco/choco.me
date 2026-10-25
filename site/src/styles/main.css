@@ -1,0 +1,134 @@
+/* Utilities come only from the components under src/. */
+@import "tailwindcss" source("../");
+@import "./tokens.css";
+@import "./nightcap.css";
+
+/* The site's own values beside the design system's: the side gutter, the filled cup's gold and
+   glow, the writing's dashed rules; and, in Nightcap's scope, its button edge and hover and the
+   macOS scene, as Nightcap's site draws them. */
+:root {
+	--gut: clamp(16px, 4vw, 48px);
+	--liner: #f3cf7e;
+	--glow: rgba(240, 180, 60, 0.6);
+	--row-line: var(--line);
+}
+.nc-scope {
+	--primary-edge: #8a5b00;
+	--nav-hover: rgba(11, 19, 48, 0.07);
+	--scene-bar: rgba(246, 246, 248, 0.74);
+	--scene-pressed: rgba(0, 0, 0, 0.13);
+	--scene-wall:
+		radial-gradient(
+			120% 90% at 85% 110%,
+			#f6d58a 0%,
+			rgba(246, 213, 138, 0) 55%
+		),
+		linear-gradient(165deg, #b9c9ef 0%, #dfe6f6 60%, #eef1f8 100%);
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--liner: #9a7a3a;
+		--glow: rgba(246, 213, 138, 0.45);
+		--row-line: #5c4038;
+	}
+	:root:not([data-theme="light"]) .nc-scope {
+		--primary-edge: #f6d58a;
+		--nav-hover: rgba(238, 241, 250, 0.09);
+		--scene-bar: rgba(28, 30, 44, 0.66);
+		--scene-pressed: rgba(255, 255, 255, 0.2);
+		--scene-wall:
+			radial-gradient(
+				120% 90% at 85% 110%,
+				rgba(246, 213, 138, 0.35) 0%,
+				rgba(246, 213, 138, 0) 55%
+			),
+			linear-gradient(165deg, #22356b 0%, #131e42 55%, #0b1330 100%);
+	}
+}
+:root[data-theme="dark"] {
+	--liner: #9a7a3a;
+	--glow: rgba(246, 213, 138, 0.45);
+	--row-line: #5c4038;
+}
+:root[data-theme="dark"] .nc-scope {
+	--primary-edge: #f6d58a;
+	--nav-hover: rgba(238, 241, 250, 0.09);
+	--scene-bar: rgba(28, 30, 44, 0.66);
+	--scene-pressed: rgba(255, 255, 255, 0.2);
+	--scene-wall:
+		radial-gradient(
+			120% 90% at 85% 110%,
+			rgba(246, 213, 138, 0.35) 0%,
+			rgba(246, 213, 138, 0) 55%
+		),
+		linear-gradient(165deg, #22356b 0%, #131e42 55%, #0b1330 100%);
+}
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+		line-height: normal;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+	}
+	body {
+		background: var(--ground);
+		color: var(--ink);
+		font-family: var(--family-text);
+		transition:
+			background-color 300ms ease,
+			color 300ms ease;
+	}
+	:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: 2px;
+	}
+}
+
+/* The design system's type styles. Gluten never goes below 40px on phones. */
+@layer components {
+	.display-xl {
+		font: 900 96px / 0.95 var(--family-display);
+		letter-spacing: -0.01em;
+		text-wrap: balance;
+	}
+	.display-l {
+		font: 850 60px / 1 var(--family-display);
+		text-wrap: balance;
+	}
+	.lead {
+		font: 400 22px / 1.5 var(--family-text);
+	}
+	.body {
+		font: 400 17px / 1.6 var(--family-text);
+	}
+	.small {
+		font: 400 14px / 1.5 var(--family-text);
+	}
+	.label {
+		font: 650 12px / 1.3 var(--family-text);
+		letter-spacing: 0.1em;
+	}
+	.nc-scope .display-l {
+		font: 400 64px / 1 var(--family-display);
+		letter-spacing: -0.005em;
+	}
+	.nc-scope .lead {
+		font-size: 20px;
+	}
+	.nc-scope .small {
+		line-height: 1.45;
+	}
+	@media (max-width: 640px) {
+		.display-xl {
+			font-size: 58px;
+		}
+		.display-l,
+		.nc-scope .display-l {
+			font-size: 40px;
+		}
+	}
+}

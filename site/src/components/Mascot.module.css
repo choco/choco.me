@@ -1,0 +1,70 @@
+.mascot {
+	--wrap: var(--salmon);
+	--band: var(--pistachio);
+	position: absolute;
+	right: -34px;
+	bottom: -56px;
+	z-index: 1;
+	width: 140px;
+}
+.mascot :global(.bar-tilt) {
+	transform: rotate(5deg);
+	transform-origin: 70px 196px;
+}
+.mascot :global(.blush) {
+	fill: var(--mascot-blush);
+	opacity: 0.35;
+}
+.mascot :global(.eyes) {
+	transition: transform 120ms ease-out;
+}
+.mascot :global(.blink) {
+	transform-box: fill-box;
+	transform-origin: center;
+	animation: blink 5s infinite;
+}
+.mascot :global(.wave) {
+	transform-box: fill-box;
+	transform-origin: 0% 100%;
+	animation: wave 3s ease-in-out infinite;
+}
+@keyframes blink {
+	0%,
+	93%,
+	100% {
+		transform: scaleY(1);
+	}
+	96% {
+		transform: scaleY(0.1);
+	}
+}
+@keyframes wave {
+	0%,
+	55%,
+	100% {
+		transform: rotate(0);
+	}
+	65% {
+		transform: rotate(-22deg);
+	}
+	75% {
+		transform: rotate(6deg);
+	}
+	85% {
+		transform: rotate(-16deg);
+	}
+}
+
+@media (max-width: 640px) {
+	.mascot {
+		right: -8px;
+		bottom: -48px;
+		width: 100px;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.mascot :global(.blink),
+	.mascot :global(.wave) {
+		animation: none;
+	}
+}

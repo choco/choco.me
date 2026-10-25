@@ -1,0 +1,31 @@
+.note {
+	display: inline-flex;
+	align-items: flex-end;
+	gap: var(--space-2);
+	color: var(--note);
+	font: 500 24px / 1.2 var(--family-note);
+	font-variation-settings:
+		"INFM" 100,
+		"BNCE" 0;
+	white-space: nowrap;
+	transform: rotate(-4deg);
+	animation: bounce 3.2s var(--ease-soft) infinite alternate;
+}
+.arrow {
+	width: 40px;
+	height: 40px;
+	flex: none;
+}
+@keyframes bounce {
+	to {
+		font-variation-settings:
+			"INFM" 100,
+			"BNCE" 70;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.note {
+		animation: none;
+	}
+}

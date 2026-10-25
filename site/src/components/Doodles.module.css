@@ -1,0 +1,79 @@
+/* Hidden until the clearance check has run, so nothing scattered is ever seen on top of text. */
+.layer {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 600ms var(--ease-soft);
+}
+.layer[data-ready] {
+	opacity: 1;
+}
+
+.spot {
+	position: absolute;
+	left: var(--x);
+	top: var(--y);
+}
+.spot[data-clash] {
+	visibility: hidden;
+}
+.doodleSpot {
+	width: 32px;
+	height: 32px;
+}
+.sprinkleSpot {
+	width: 7px;
+	height: 22px;
+}
+
+.doodle {
+	display: block;
+	width: 100%;
+	height: 100%;
+	color: var(--tint);
+	opacity: 0.5;
+	animation: sway calc(var(--dur-drift) / 3) ease-in-out infinite alternate;
+}
+.sprinkle {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border-radius: var(--radius-pill);
+	background: var(--tint);
+	transform: rotate(var(--turn));
+	animation: tumble var(--dur-drift) linear infinite;
+}
+@keyframes sway {
+	from {
+		transform: rotate(-8deg) translateY(0);
+	}
+	to {
+		transform: rotate(8deg) translateY(-6px);
+	}
+}
+@keyframes tumble {
+	to {
+		transform: rotate(calc(var(--turn) + 360deg));
+	}
+}
+
+@media (max-width: 640px) {
+	.spot {
+		left: var(--phone-x);
+		top: var(--phone-y);
+	}
+	.spot:not([data-phone]) {
+		display: none;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.layer {
+		transition: none;
+	}
+	.doodle,
+	.sprinkle {
+		animation: none;
+	}
+}

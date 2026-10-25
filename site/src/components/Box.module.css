@@ -1,0 +1,126 @@
+.box {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--space-4);
+	padding: var(--space-6);
+	border-radius: var(--radius-lg);
+	background: var(--box);
+}
+/* A paper cup: its pleats ring whatever sits inside, which is laid over the cup's padding so a
+   cup stays square however its contents size themselves. */
+.box :global(.cm-box__cup) {
+	position: relative;
+	container-type: inline-size;
+	aspect-ratio: 1;
+	padding: 7px;
+	border-radius: var(--radius-md);
+	background: repeating-conic-gradient(
+		from 0deg,
+		var(--box) 0deg 5deg,
+		var(--surface) 5deg 10deg
+	);
+}
+.box :global(.cm-box__cup) > * {
+	position: absolute;
+	inset: 7px;
+}
+.box :global(.cm-box__crumbs) {
+	display: grid;
+	place-items: center;
+	border-radius: calc(var(--radius-md) - 5px);
+	background: var(--box);
+	color: var(--ink-muted);
+}
+.box :global(.cup-art) {
+	display: block;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+	transform: scale(1.2);
+}
+
+/* The praline still in the box glows, lit from underneath. */
+.box :global(.pick) {
+	display: block;
+	border-radius: calc(var(--radius-md) - 5px);
+	background:
+		radial-gradient(
+			circle at 50% 55%,
+			rgba(246, 213, 138, 0.95) 34%,
+			rgba(246, 213, 138, 0) 74%
+		),
+		var(--box);
+}
+.box :global(.cup-filled)::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	box-shadow:
+		0 0 0 3px var(--liner),
+		0 0 26px 8px var(--glow);
+	pointer-events: none;
+	animation: glow 3.6s ease-in-out infinite;
+}
+@keyframes glow {
+	50% {
+		opacity: 0.45;
+	}
+}
+.box :global(.pick .pr) {
+	transform-box: fill-box;
+	transform-origin: center;
+	transition: transform var(--dur-pop) var(--ease-pop);
+}
+.box :global(.pick .flag) {
+	transform-box: fill-box;
+	transform-origin: 0% 100%;
+}
+/* The shadow stays on the cup's floor: as the praline lifts, it spreads and fades. */
+.box :global(.pick .shadow) {
+	opacity: 0.14;
+	transform-box: fill-box;
+	transform-origin: center;
+	transition:
+		transform var(--dur-pop) var(--ease-pop),
+		opacity var(--dur-pop) var(--ease-soft);
+}
+.box :global(.pick:hover .shadow),
+.box :global(.pick:focus-visible .shadow) {
+	opacity: 0.08;
+	transform: scale(1.2, 1.1);
+}
+.box :global(.pick:hover .pr),
+.box :global(.pick:focus-visible .pr) {
+	transform: translateY(-8px) rotate(-6deg);
+}
+.box :global(.pick:hover .flag),
+.box :global(.pick:focus-visible .flag) {
+	animation: flag 700ms var(--ease-pop);
+}
+.box :global(.pick:focus-visible) {
+	outline: 2px solid var(--focus);
+	outline-offset: 3px;
+}
+@keyframes flag {
+	30% {
+		transform: rotate(-8deg);
+	}
+	60% {
+		transform: rotate(5deg);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.box :global(.cup-filled)::after,
+	.box :global(.pick:hover .flag),
+	.box :global(.pick:focus-visible .flag) {
+		animation: none;
+	}
+	.box :global(.pick .pr),
+	.box :global(.pick .shadow) {
+		transition: none;
+	}
+}

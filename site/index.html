@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enrico Ghirardi</title>
+<meta name="description" content="Enrico Ghirardi, a software engineer who loves UI design and illustration, and the maker of Nightcap for the Mac.">
+<link rel="canonical" href="https://choco.me/">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://choco.me/">
+<meta property="og:site_name" content="choco.me">
+<meta property="og:title" content="Enrico Ghirardi">
+<meta property="og:description" content="Software engineer who loves UI design and illustration, and breaking into things. Maker of Nightcap for the Mac.">
+<meta property="og:image" content="https://choco.me/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hi, I'm Enrico: the hello beside a box of pralines with one left, and a chocolate bar who ate the rest">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#fffaf7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#221513" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="me" href="https://mastodon.social/@chocobuono">
+<script>
+  // The footer's appearance switch, applied before the first paint.
+  try {
+    const theme = localStorage.getItem('choco-theme');
+    if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+  } catch {}
+</script>
+<script type="module" src="/src/main.tsx"></script>
+</head>
+<body>
+<div id="root"><!--app--></div>
+</body>
+</html>
