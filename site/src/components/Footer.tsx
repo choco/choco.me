@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { NOTES } from "../data/notes";
 import { vars } from "../lib/vars";
 import { CocoaArt } from "./CocoaArt";
@@ -42,10 +43,30 @@ const SINKERS: (Placed & { flavour: Flavour; turn: number; delay: number })[] =
 		{ x: "96%", y: "22%", flavour: "lemon", turn: -35, delay: -11 },
 	];
 
+/** Marks the root `data-near-end` while the page is scrolled nearer its end than its top, so
+ *  scrolling past the end shows the cocoa (main.css). A page too short to scroll stays unmarked. */
+function useNearEnd() {
+	useEffect(() => {
+		const root = document.documentElement;
+		const update = () => {
+			const end = root.scrollHeight - root.clientHeight;
+			root.toggleAttribute("data-near-end", end > 0 && scrollY > end / 2);
+		};
+		update();
+		addEventListener("scroll", update, { passive: true });
+		addEventListener("resize", update);
+		return () => {
+			removeEventListener("scroll", update);
+			removeEventListener("resize", update);
+		};
+	}, []);
+}
+
 /** The hot cocoa at the bottom of every page: the next praline still cooling, an invitation to
  *  sponsor with marshmallows saving a seat, and the copyright, the appearance switch and the
  *  sign-off. */
 export function Footer() {
+	useNearEnd();
 	return (
 		<footer className={styles.footer}>
 			<div className={styles.surface}>

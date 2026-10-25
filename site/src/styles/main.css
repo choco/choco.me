@@ -65,9 +65,16 @@
 }
 
 @layer base {
+	/* Scrolled past either end, the browser shows the root's background: the ground, or the footer's
+	   cocoa while the page is nearer its end than its top (see Footer). WebKit shows the body's
+	   background there instead whenever it has one, so the page's ground is #root's. */
 	html {
+		background: var(--ground);
 		scroll-behavior: smooth;
 		line-height: normal;
+	}
+	html[data-near-end] {
+		background: var(--cocoa);
 	}
 	@media (prefers-reduced-motion: reduce) {
 		html {
@@ -75,12 +82,13 @@
 		}
 	}
 	body {
-		background: var(--ground);
 		color: var(--ink);
 		font-family: var(--family-text);
-		transition:
-			background-color 300ms ease,
-			color 300ms ease;
+		transition: color 300ms ease;
+	}
+	#root {
+		background: var(--ground);
+		transition: background-color 300ms ease;
 	}
 	:focus-visible {
 		outline: 2px solid var(--focus);
