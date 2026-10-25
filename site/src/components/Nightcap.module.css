@@ -63,7 +63,8 @@
 	color: var(--moon-text);
 }
 .lead {
-	max-width: 34ch;
+	/* 34ch of Figtree, in em so the stand-in drawn while Figtree loads wraps at the same width. */
+	max-width: 21.8em;
 	color: var(--ink-muted);
 }
 .sceneColumn {

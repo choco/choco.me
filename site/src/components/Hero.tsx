@@ -106,7 +106,8 @@ export function Hero() {
 							MADE IN ITALY · LIVING IN ZURICH
 						</p>
 						<h1 className="display-xl text-ink">
-							Hi, I'm <span className={styles.name}>Enrico</span>
+							<span className={styles.hi}>Hi, I'm</span>{" "}
+							<span className={styles.name}>Enrico</span>
 						</h1>
 						<p className={`lead ${styles.intro}`}>
 							Software engineer who loves UI design and illustration, and

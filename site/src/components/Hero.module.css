@@ -23,6 +23,11 @@
 }
 
 /* The name's highlight is the hello's one accent. */
+/* Kept on one line, so the hello breaks before the name in any face, the stand-in shown while
+   Gluten loads included, and the page doesn't move when Gluten arrives. */
+.hi {
+	white-space: nowrap;
+}
 .name {
 	position: relative;
 	display: inline-block;
@@ -32,7 +37,8 @@
 	color: var(--on-flavour);
 }
 .intro {
-	max-width: 34ch;
+	/* 34ch of Onest, in em so the stand-in drawn while Onest loads wraps at the same width. */
+	max-width: 22.6em;
 	color: var(--ink-muted);
 	text-wrap: pretty;
 }

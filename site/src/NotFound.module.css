@@ -13,7 +13,8 @@
 	padding-inline: var(--gut);
 }
 .text {
-	max-width: 32ch;
+	/* 32ch of Onest, in em so the stand-in drawn while Onest loads wraps at the same width. */
+	max-width: 21.3em;
 	color: var(--ink-muted);
 	text-wrap: pretty;
 }

@@ -7,6 +7,12 @@ import {
 } from "node:fs";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createFontStack } from "@capsizecss/core";
+import arial from "@capsizecss/metrics/arial";
+import georgia from "@capsizecss/metrics/georgia";
+import notoSerif from "@capsizecss/metrics/notoSerif";
+import roboto from "@capsizecss/metrics/roboto";
+import { fromBuffer } from "@capsizecss/unpack";
 import subsetFont from "subset-font";
 import type { Plugin } from "vite";
 
@@ -18,6 +24,7 @@ const choco = {
 	output: fileURLToPath(new URL("../src/styles/tokens.css", import.meta.url)),
 };
 const nightcap = {
+	vendor: fileURLToPath(new URL("../vendor/nightcap/", import.meta.url)),
 	tokens: fileURLToPath(
 		new URL("../vendor/nightcap/tokens.json", import.meta.url),
 	),
@@ -32,6 +39,12 @@ interface Token<V = string> {
 	name: string;
 	value: V;
 }
+interface Font {
+	family: string;
+	weight: string;
+	style?: string;
+	file: string;
+}
 interface Tokens {
 	color: { tokens: Token<Value>[] };
 	spacing?: { tokens: Token[] };
@@ -42,7 +55,7 @@ interface Tokens {
 	duration?: { tokens: Token[] };
 	type: {
 		families: Record<string, string>;
-		fonts: { family: string; weight: string; style?: string; file: string }[];
+		fonts: Font[];
 	};
 }
 
@@ -54,6 +67,15 @@ export type Axes = Record<string, number | { min: number; max: number }>;
 export const KEPT: Record<string, Axes> = {
 	Gluten: { slnt: 0 },
 	"Shantell Sans": { wght: 500, INFM: 100, SPAC: 0, BNCE: 0 },
+};
+
+// The weight each face's stand-ins are sized at: the text a late face would move most, the hello in
+// Gluten and paragraphs in the rest. A face cut to one weight is sized at that.
+const MATCHED_AT: Record<string, number> = {
+	Gluten: 900,
+	Onest: 400,
+	Caprasimo: 400,
+	Figtree: 400,
 };
 
 /** The design system's font file for a family, and the axes the site keeps of it. */
@@ -83,7 +105,7 @@ function themed(
 }
 
 // A face cut to a weight or a weight range offers that, whatever its file could.
-function weight(font: Tokens["type"]["fonts"][number]): string {
+function weight(font: Font): string {
 	const wght = KEPT[font.family]?.wght;
 	if (wght === undefined) return font.weight;
 	return typeof wght === "number" ? `${wght}` : `${wght.min} ${wght.max}`;
@@ -95,10 +117,66 @@ const fontFaces = (tokens: Tokens, dir: string) =>
 			`@font-face{font-family:"${font.family}";src:url("${dir}${font.file}") format("woff2");font-weight:${weight(font)};font-style:${font.style ?? "normal"};font-display:swap}`,
 	);
 
-/** choco.me's tokens as CSS: the fonts, the themed tokens as variables, light on :root and dark
- *  for the dark system appearance unless the page was set to light, and for an explicit dark
- *  choice; the rest as plain variables; then Tailwind's theme from them. */
-function chocoCss(tokens: Tokens): string {
+/** Stand-ins for a face while it loads: local fonts sized and spaced to the face's metrics, so the
+ *  swap to it moves nothing. Their @font-face rules, and the face's stack with them after it. */
+async function standIns(font: Font, file: string, stack: string) {
+	const kept = KEPT[font.family] ?? {};
+	const wght =
+		typeof kept.wght === "number" ? kept.wght : MATCHED_AT[font.family];
+	if (wght === undefined)
+		throw new Error(`no weight to size ${font.family}'s stand-ins at`);
+	const source = readFileSync(file);
+	const variable = font.weight.includes(" ");
+	const metrics = await fromBuffer(
+		variable
+			? await subsetFont(source, null, {
+					targetFormat: "sfnt",
+					keepAllGlyphs: true,
+					variationAxes: { ...kept, wght },
+				})
+			: source,
+	);
+	const locals =
+		stack.split(", ").at(-1) === "serif"
+			? [georgia, notoSerif]
+			: [arial, roboto];
+	const { fontFamily, fontFaces } = createFontStack([
+		{ ...metrics, familyName: font.family },
+		...locals,
+	]);
+	// createFontStack lists the face, then a stand-in for each local font, then the locals.
+	const named = fontFamily.split(", ").slice(1, 1 + locals.length);
+	const [first, ...rest] = stack.split(", ");
+	return { faces: fontFaces, stack: [first, ...named, ...rest].join(", ") };
+}
+
+/** Each family's stack with its face's stand-ins, and their @font-face rules. A family whose face
+ *  `dir` doesn't ship keeps its stack. */
+async function families(tokens: Tokens, dir: string, shipped: Set<string>) {
+	const faces: string[] = [];
+	const stacks: Record<string, string> = {};
+	for (const [key, stack] of Object.entries(tokens.type.families)) {
+		const family = stack.split(", ")[0].replaceAll('"', "");
+		const font = tokens.type.fonts.find(
+			(font) => font.family === family && font.style !== "italic",
+		);
+		if (!font || !shipped.has(family)) {
+			stacks[key] = stack;
+			continue;
+		}
+		const fitted = await standIns(font, dir + font.file, stack);
+		faces.push(fitted.faces);
+		stacks[key] = fitted.stack;
+	}
+	return { faces, stacks };
+}
+
+type Families = Awaited<ReturnType<typeof families>>;
+
+/** choco.me's tokens as CSS: the fonts and their stand-ins, the themed tokens as variables, light
+ *  on :root and dark for the dark system appearance unless the page was set to light, and for an
+ *  explicit dark choice; the rest as plain variables; then Tailwind's theme from them. */
+function chocoCss(tokens: Tokens, { faces, stacks }: Families): string {
 	const file = "design/tokens.json";
 	const themedTokens = [
 		...tokens.color.tokens,
@@ -123,12 +201,13 @@ function chocoCss(tokens: Tokens): string {
 	return [
 		`/* Generated from ${file} by site/plugins/design.ts. */`,
 		...fontFaces(tokens, "./"),
+		...faces,
 		`:root{${themedTokens.map((token) => `--${token.name}:${themed(file, token, "light")}`).join(";")};${plain.map(({ name, value }) => `--${name}:${value}`).join(";")};color-scheme:light}`,
 		`@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){${dark};color-scheme:dark}}`,
 		`:root[data-theme="dark"]{${dark};color-scheme:dark}`,
 		// Inline, so a utility reads the variable, which the theme (or a product's scope) switches.
 		// The families as --family-* variables, which a product's scope can swap for its own faces.
-		`:root{${Object.entries(tokens.type.families)
+		`:root{${Object.entries(stacks)
 			.map(([family, stack]) => `--family-${family}:${stack}`)
 			.join(";")}}`,
 		`@theme inline{--color-*:initial;${tokens.color.tokens.map(({ name }) => `--color-${name}:var(--${name})`).join(";")};--font-*:initial;${Object.keys(
@@ -141,16 +220,18 @@ function chocoCss(tokens: Tokens): string {
 	].join("\n");
 }
 
+// The faces a Nightcap section sets.
+const NIGHTCAP_FACES = new Set(["Caprasimo", "Figtree"]);
+
 /** Nightcap's tokens, scoped to `.nc-scope`: its Day theme by default, its Night theme wherever
  *  choco.me is dark, so a Nightcap section follows the page. */
-function nightcapCss(tokens: Tokens): string {
+function nightcapCss(tokens: Tokens, { faces, stacks }: Families): string {
 	const file = "site/vendor/nightcap/tokens.json";
 	const all = [...tokens.color.tokens, ...(tokens.shadow?.tokens ?? [])];
 	const night = all
 		.filter((token) => typeof token.value === "object")
 		.map((token) => `--${token.name}:${themed(file, token, "dark")}`)
 		.join(";");
-	const used = new Set(["Caprasimo", "Figtree"]);
 	return [
 		`/* Generated from ${file} by site/plugins/design.ts. */`,
 		...fontFaces(
@@ -159,13 +240,15 @@ function nightcapCss(tokens: Tokens): string {
 				type: {
 					...tokens.type,
 					fonts: tokens.type.fonts.filter(
-						(font) => used.has(font.family) && font.style !== "italic",
+						(font) =>
+							NIGHTCAP_FACES.has(font.family) && font.style !== "italic",
 					),
 				},
 			},
 			"../../vendor/nightcap/",
 		),
-		`.nc-scope{${all.map((token) => `--${token.name}:${themed(file, token, "light")}`).join(";")};${(tokens.radius?.tokens ?? []).map(({ name, value }) => `--${name}:${value}`).join(";")};--family-display:${tokens.type.families.display};--family-text:${tokens.type.families.text};color-scheme:light;font-family:var(--family-text);color:var(--ink)}`,
+		...faces,
+		`.nc-scope{${all.map((token) => `--${token.name}:${themed(file, token, "light")}`).join(";")};${(tokens.radius?.tokens ?? []).map(({ name, value }) => `--${name}:${value}`).join(";")};--family-display:${stacks.display};--family-text:${stacks.text};color-scheme:light;font-family:var(--family-text);color:var(--ink)}`,
 		`@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .nc-scope{${night};color-scheme:dark}}`,
 		`:root[data-theme="dark"] .nc-scope{${night};color-scheme:dark}`,
 		"",
@@ -208,19 +291,24 @@ async function writeFonts(tokens: Tokens) {
 
 async function writeTokens() {
 	const tokens: Tokens = JSON.parse(readFileSync(choco.tokens, "utf8"));
-	write(choco.output, chocoCss(tokens));
-	write(
-		nightcap.output,
-		nightcapCss(JSON.parse(readFileSync(nightcap.tokens, "utf8"))),
+	const nightcapTokens: Tokens = JSON.parse(
+		readFileSync(nightcap.tokens, "utf8"),
 	);
-	await writeFonts(tokens);
+	const shipped = new Set(tokens.type.fonts.map((font) => font.family));
+	const [chocoFamilies, nightcapFamilies] = await Promise.all([
+		families(tokens, choco.design, shipped),
+		families(nightcapTokens, nightcap.vendor, NIGHTCAP_FACES),
+		writeFonts(tokens),
+	]);
+	write(choco.output, chocoCss(tokens, chocoFamilies));
+	write(nightcap.output, nightcapCss(nightcapTokens, nightcapFamilies));
 }
 
 /** What the site takes from the rest of the repo: src/styles/tokens.css from the design system's
  *  tokens, with its fonts cut to what the site keeps in src/styles/fonts/, and
- *  src/styles/nightcap.css from Nightcap's, all written before Vite reads anything and again when
- *  their sources change while serving; preloads for the first screen's fonts; and the licences,
- *  under licenses/ in the built site. */
+ *  src/styles/nightcap.css from Nightcap's, each with stand-ins sized to its faces, all written
+ *  before Vite reads anything and again when their sources change while serving; preloads for the
+ *  first screen's fonts; and the licences, under licenses/ in the built site. */
 export function design(): Plugin {
 	return {
 		name: "choco:design",

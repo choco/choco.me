@@ -107,7 +107,8 @@
 	text-wrap: balance;
 }
 .copy {
-	max-width: 46ch;
+	/* 46ch of Onest, in em so the stand-in drawn while Onest loads wraps at the same width. */
+	max-width: 30.6em;
 	color: var(--lavender);
 	text-wrap: pretty;
 }
