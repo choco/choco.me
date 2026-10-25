@@ -173,8 +173,19 @@
 	left: var(--gut);
 }
 
+/* Side by side, narrower than this, the hello would crowd the box and the card and bar peeking
+   out of it would reach the screen's edges, so the two stack, with the box centred under the
+   hello. */
+@media (max-width: 1023px) {
+	.text {
+		flex-basis: 100%;
+	}
+	.boxColumn {
+		margin-inline: auto;
+	}
+}
 /* Stacked, the box sits low in the hello, so the notes under it need the room. */
-@media (min-width: 641px) and (max-width: 899px) {
+@media (min-width: 641px) and (max-width: 1023px) {
 	.hero {
 		padding-bottom: 184px;
 	}

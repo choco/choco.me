@@ -258,7 +258,10 @@
 	.pencil {
 		width: 54px;
 	}
-	/* Smaller, on the two blank rows, under the words being written. */
+}
+/* Narrower, the cards would cover the words being written, so they sit smaller on the two blank
+   rows under them. */
+@media (max-width: 899px) {
 	.stack {
 		top: 58px;
 		right: -6px;
