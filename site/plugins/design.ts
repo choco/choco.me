@@ -1,10 +1,20 @@
-import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+	existsSync,
+	mkdirSync,
+	readdirSync,
+	readFileSync,
+	writeFileSync,
+} from "node:fs";
+import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import subsetFont from "subset-font";
 import type { Plugin } from "vite";
 
 const choco = {
+	design: fileURLToPath(new URL("../../design/", import.meta.url)),
 	tokens: fileURLToPath(new URL("../../design/tokens.json", import.meta.url)),
 	licences: fileURLToPath(new URL("../../design/licenses/", import.meta.url)),
+	styles: fileURLToPath(new URL("../src/styles/", import.meta.url)),
 	output: fileURLToPath(new URL("../src/styles/tokens.css", import.meta.url)),
 };
 const nightcap = {
@@ -36,6 +46,24 @@ interface Tokens {
 	};
 }
 
+export type Axes = Record<string, number | { min: number; max: number }>;
+
+/** What the site sets of each variable face. Each axis here is pinned, or cut to a range, when the
+ *  build copies the face, and the rest of its design space isn't shipped: a weight or axis value
+ *  set outside these renders at the nearest one kept. */
+export const KEPT: Record<string, Axes> = {
+	Gluten: { slnt: 0 },
+	"Shantell Sans": { wght: 500, INFM: 100, SPAC: 0, BNCE: 0 },
+};
+
+/** The design system's font file for a family, and the axes the site keeps of it. */
+export function face(family: string): { file: string; axes: Axes } {
+	const tokens: Tokens = JSON.parse(readFileSync(choco.tokens, "utf8"));
+	const font = tokens.type.fonts.find((font) => font.family === family);
+	if (!font) throw new Error(`design/tokens.json has no ${family}`);
+	return { file: choco.design + font.file, axes: KEPT[family] ?? {} };
+}
+
 // A value that names another token, such as "{cocoa}", is that token's variable.
 const css = (value: string) =>
 	/^\{.+\}$/.test(value) ? `var(--${value.slice(1, -1)})` : value;
@@ -54,10 +82,17 @@ function themed(
 	return css(picked);
 }
 
+// A face cut to a weight or a weight range offers that, whatever its file could.
+function weight(font: Tokens["type"]["fonts"][number]): string {
+	const wght = KEPT[font.family]?.wght;
+	if (wght === undefined) return font.weight;
+	return typeof wght === "number" ? `${wght}` : `${wght.min} ${wght.max}`;
+}
+
 const fontFaces = (tokens: Tokens, dir: string) =>
 	tokens.type.fonts.map(
 		(font) =>
-			`@font-face{font-family:"${font.family}";src:url("${dir}${font.file}") format("woff2");font-weight:${font.weight};font-style:${font.style ?? "normal"};font-display:swap}`,
+			`@font-face{font-family:"${font.family}";src:url("${dir}${font.file}") format("woff2");font-weight:${weight(font)};font-style:${font.style ?? "normal"};font-display:swap}`,
 	);
 
 /** choco.me's tokens as CSS: the fonts, the themed tokens as variables, light on :root and dark
@@ -87,7 +122,7 @@ function chocoCss(tokens: Tokens): string {
 	];
 	return [
 		`/* Generated from ${file} by site/plugins/design.ts. */`,
-		...fontFaces(tokens, "../../../design/"),
+		...fontFaces(tokens, "./"),
 		`:root{${themedTokens.map((token) => `--${token.name}:${themed(file, token, "light")}`).join(";")};${plain.map(({ name, value }) => `--${name}:${value}`).join(";")};color-scheme:light}`,
 		`@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){${dark};color-scheme:dark}}`,
 		`:root[data-theme="dark"]{${dark};color-scheme:dark}`,
@@ -137,29 +172,60 @@ function nightcapCss(tokens: Tokens): string {
 	].join("\n");
 }
 
-function write(output: string, content: string) {
+function write(output: string, content: string | Uint8Array) {
+	const data = typeof content === "string" ? Buffer.from(content) : content;
 	// Unchanged content leaves the file alone, so the dev server doesn't reload for nothing.
-	if (!existsSync(output) || readFileSync(output, "utf8") !== content)
-		writeFileSync(output, content);
+	if (!existsSync(output) || !readFileSync(output).equals(data)) {
+		mkdirSync(dirname(output), { recursive: true });
+		writeFileSync(output, data);
+	}
 }
 
-function writeTokens() {
-	write(choco.output, chocoCss(JSON.parse(readFileSync(choco.tokens, "utf8"))));
+/** The design system's fonts beside the tokens, each variable face cut to what the site keeps. */
+async function writeFonts(tokens: Tokens) {
+	for (const family of Object.keys(KEPT))
+		if (!tokens.type.fonts.some((font) => font.family === family))
+			throw new Error(`design/tokens.json has no ${family} to cut`);
+	await Promise.all(
+		tokens.type.fonts.map(async (font) => {
+			const source = readFileSync(choco.design + font.file);
+			const axes = KEPT[font.family];
+			write(
+				choco.styles + font.file,
+				axes
+					? await subsetFont(source, null, {
+							targetFormat: "woff2",
+							keepAllGlyphs: true,
+							variationAxes: axes,
+							// The licence's description and address, which the OFL asks a copy to carry.
+							preserveNameIds: [13, 14],
+						})
+					: source,
+			);
+		}),
+	);
+}
+
+async function writeTokens() {
+	const tokens: Tokens = JSON.parse(readFileSync(choco.tokens, "utf8"));
+	write(choco.output, chocoCss(tokens));
 	write(
 		nightcap.output,
 		nightcapCss(JSON.parse(readFileSync(nightcap.tokens, "utf8"))),
 	);
+	await writeFonts(tokens);
 }
 
 /** What the site takes from the rest of the repo: src/styles/tokens.css from the design system's
- *  tokens and src/styles/nightcap.css from Nightcap's, both written before Vite reads anything
- *  and again when their sources change while serving; preloads for the first screen's fonts; and
- *  the licences, under licenses/ in the built site. */
+ *  tokens, with its fonts cut to what the site keeps in src/styles/fonts/, and
+ *  src/styles/nightcap.css from Nightcap's, all written before Vite reads anything and again when
+ *  their sources change while serving; preloads for the first screen's fonts; and the licences,
+ *  under licenses/ in the built site. */
 export function design(): Plugin {
 	return {
 		name: "choco:design",
-		config() {
-			writeTokens();
+		async config() {
+			await writeTokens();
 		},
 		configureServer(server) {
 			server.watcher.add([choco.tokens, nightcap.tokens]);

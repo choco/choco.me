@@ -76,7 +76,6 @@
 	color: var(--lavender-text);
 	font-family: var(--family-note);
 	font-weight: 500;
-	font-variation-settings: "INFM" 100;
 }
 .soon {
 	font-size: 18px;
@@ -204,7 +203,6 @@
 	top: 44px;
 	color: var(--lavender-text);
 	font: 500 24px / 1 var(--family-note);
-	font-variation-settings: "INFM" 100;
 }
 .front {
 	transform: rotate(-3deg);

@@ -149,13 +149,14 @@ export function useClearance(root: RefObject<HTMLElement | null>) {
 		const page = root.current;
 		if (!page) throw new Error("the clearance check has no page");
 		let frame = 0;
+		// Every measure comes before any change, so the page is laid out once per check. A clash
+		// only hides a spot (visibility), so a hidden spot still measures where it is.
 		const check = () => {
 			const spots = [...page.querySelectorAll<HTMLElement>("[data-doodle]")];
-			for (const spot of spots) delete spot.dataset.clash;
 			const boxes = obstacles(page);
-			for (const spot of spots) {
+			const clashes = spots.map((spot) => {
 				const rect = spot.getBoundingClientRect();
-				if (rect.width === 0) continue;
+				if (rect.width === 0) return false;
 				const kind = spot.dataset.doodle;
 				if (!kind || !(kind in REACH))
 					throw new Error(`no reach for "${kind}"`);
@@ -164,17 +165,16 @@ export function useClearance(root: RefObject<HTMLElement | null>) {
 				const right = rect.right + reach.x;
 				const top = rect.top - reach.up;
 				const bottom = rect.bottom + reach.down;
-				if (
-					boxes.some(
-						(box) =>
-							left < box.right &&
-							right > box.left &&
-							top < box.bottom &&
-							bottom > box.top,
-					)
-				)
-					spot.dataset.clash = "";
-			}
+				return boxes.some(
+					(box) =>
+						left < box.right &&
+						right > box.left &&
+						top < box.bottom &&
+						bottom > box.top,
+				);
+			});
+			for (const [i, spot] of spots.entries())
+				spot.toggleAttribute("data-clash", clashes[i]);
 			for (const layer of page.querySelectorAll<HTMLElement>("[data-doodles]"))
 				layer.dataset.ready = "";
 		};

@@ -256,7 +256,6 @@
 	margin-top: -24px;
 	color: var(--lavender);
 	font: 500 15px / 1.2 var(--family-note);
-	font-variation-settings: "INFM" 100;
 	text-align: center;
 	opacity: 0.8;
 }

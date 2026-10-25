@@ -1,3 +1,4 @@
+import { NOTES } from "../data/notes";
 import { vars } from "../lib/vars";
 import { CocoaArt } from "./CocoaArt";
 import { type Flavour, type Placed, Scatter, Spot } from "./Doodles";
@@ -53,9 +54,8 @@ export function Footer() {
 					flavour="strawberry"
 					arrow="rotate(95deg)"
 					className={styles.note}
-				>
-					hot cocoa, careful
-				</Note>
+					lines={NOTES.careful}
+				/>
 			</div>
 			<div className={styles.cocoa}>
 				<Scatter>

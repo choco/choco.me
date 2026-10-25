@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { NOTES } from "../data/notes";
 import { POSTS } from "../data/posts";
 import { vars } from "../lib/vars";
 import { Box } from "./Box";
@@ -134,15 +135,9 @@ export function Hero() {
 							arrow="rotate(188deg)"
 							arrowFirst
 							className={styles.tryNote}
-						>
-							try one
-						</Note>
-						<a
-							className={styles.tucked}
-							href="#writing"
-							aria-label="Writing: jump to it"
-							data-clear
-						>
+							lines={NOTES.tryOne}
+						/>
+						<a className={styles.tucked} href="#writing" data-clear>
 							<span className={styles.tuckedBody}>
 								<span className={styles.tuckedTitle}>Writing</span>
 								<span className={styles.tuckedMeta}>
@@ -159,11 +154,8 @@ export function Hero() {
 							flavour="strawberry"
 							arrow="rotate(30deg)"
 							className={styles.caption}
-						>
-							the rest?
-							<br />
-							wasn't me
-						</Note>
+							lines={NOTES.wasntMe}
+						/>
 					</div>
 				</div>
 			</section>
@@ -173,9 +165,8 @@ export function Hero() {
 					arrow="scaleX(-1) rotate(110deg)"
 					arrowFirst
 					className={styles.unwrapped}
-				>
-					the last one, unwrapped
-				</Note>
+					lines={NOTES.unwrapped}
+				/>
 			</div>
 		</>
 	);

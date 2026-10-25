@@ -2,6 +2,7 @@
 /build/
 node_modules/
 .DS_Store
-# Written from the design tokens by site/plugins/design.ts.
+# Written by site/plugins/design.ts: the tokens as CSS, and the fonts as the site keeps them.
 /site/src/styles/tokens.css
 /site/src/styles/nightcap.css
+/site/src/styles/fonts/

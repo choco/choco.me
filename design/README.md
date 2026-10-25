@@ -61,7 +61,7 @@ Write the way Enrico would answer a friend who asked "so, what do you do?".
 
 - Things move like soft candy. They pop with `ease-pop` over `dur-pop` and settle; fades and drifts use `ease-soft`.
 - On hover or focus the praline lifts and tilts, and its flag wiggles.
-- Ambient motion is slow: doodles sway, the mascot blinks every few seconds, waves, and its eyes follow the pointer, the praline still in the box glows and dims, and the empty notebook's pencil scribbles now and then; in the footer, steam rises, sprinkles sink and the marshmallow lets out a bubble. Reaching "Sponsor on GitHub" wakes the marshmallow and drops a second one into its saved seat.
+- Ambient motion is slow: doodles sway, handwritten notes bounce letter by letter as Shantell Sans' bounce axis moves them, the mascot blinks every few seconds, waves, and its eyes follow the pointer, the praline still in the box glows and dims, and the empty notebook's pencil scribbles now and then; in the footer, steam rises, sprinkles sink and the marshmallow lets out a bubble. Reaching "Sponsor on GitHub" wakes the marshmallow and drops a second one into its saved seat.
 - Motion never carries meaning on its own.
 - With reduced motion, everything stays at rest and states change instantly.
 

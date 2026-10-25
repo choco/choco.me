@@ -4,28 +4,53 @@
 	gap: var(--space-2);
 	color: var(--note);
 	font: 500 24px / 1.2 var(--family-note);
-	font-variation-settings:
-		"INFM" 100,
-		"BNCE" 0;
 	white-space: nowrap;
 	transform: rotate(-4deg);
-	animation: bounce 3.2s var(--ease-soft) infinite alternate;
 }
 .arrow {
 	width: 40px;
 	height: 40px;
 	flex: none;
 }
+.line {
+	position: relative;
+	display: inline-block;
+}
+/* A letter's box: as wide as the letter, tall enough for its bounce, with the whole line inside
+   offset back into place. Animating the font's own bounce axis instead would re-lay-out the text
+   every frame. */
+.letters > span {
+	display: none;
+	position: absolute;
+	left: calc(var(--x0) * 1em);
+	top: -0.5em;
+	width: calc((var(--x1) - var(--x0)) * 1em);
+	height: 2.2em;
+	overflow: clip;
+	pointer-events: none;
+}
+.letters > span::before {
+	content: var(--text);
+	position: absolute;
+	left: calc(var(--x0) * -1em);
+	top: 0.5em;
+}
 @keyframes bounce {
 	to {
-		font-variation-settings:
-			"INFM" 100,
-			"BNCE" 70;
+		transform: translateY(calc(var(--dy) * 1em));
 	}
 }
 
-@media (prefers-reduced-motion: reduce) {
-	.note {
-		animation: none;
+@media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+	.note[data-loaded] .letters > span {
+		display: block;
+		animation: bounce 3.2s var(--ease-soft) infinite alternate;
+	}
+	.note[data-loaded] .words {
+		color: transparent;
+	}
+	.note[data-loaded] .words::selection {
+		color: transparent;
+		background: Highlight;
 	}
 }

@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
 import { design } from "./plugins/design.ts";
+import { notes } from "./plugins/notes.ts";
 
 // The dev server serves each page rendered into its HTML's outlet, as the build's prerender.ts
 // writes it, so hydration meets the same markup in both.
@@ -28,7 +29,7 @@ function renderInDev(): Plugin {
 export default defineConfig(({ command }) => ({
 	// Absolute, since Pages serves 404.html at whatever path was missing.
 	base: "/",
-	plugins: [design(), tailwindcss(), react(), renderInDev()],
+	plugins: [design(), notes(), tailwindcss(), react(), renderInDev()],
 	css: {
 		// Readable, and the same in the client and server builds, whose markup must match.
 		modules: {
@@ -38,7 +39,6 @@ export default defineConfig(({ command }) => ({
 	},
 	// A path that isn't a file is a 404, as on Pages, rather than the home page again.
 	appType: "mpa",
-	server: { fs: { allow: [".."] } },
 	// The server build runs once, from outside the site's folder, so it carries its dependencies.
 	ssr: command === "build" ? { noExternal: true } : {},
 	build: {
